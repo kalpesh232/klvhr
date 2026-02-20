@@ -1,0 +1,1193 @@
+ORACLE DATABASE PATCHING
+==============================
+
+1. The cluster_install script invokes patchadd to apply the patches to the live boot
+environment in the installation order specified in the patch_order file in the Cluster.
+
+2. The patch utilities patch must be applied to the live system in all cases.
+
+3. The Solaris Live Upgrade Software: Minimum Patch Requirements document outlines the
+required patches and the process that must be followed to get Solaris Live Upgrade from
+the Solaris 08/07 release working on a pre-08/07 Solaris release.
+
+4. So, the problem becomes mainly one of identifying important patches from the user
+perspective and applying them in a safe and reliable manner.
+
+5. Patch Check Advanced (PCA):
+
+6. Core Solaris Tools for Patching The recommended method of proactively applying patches is
+to use Solaris Live Upgrade.
+
+7. ./patch_order The first -t tells luupgrade that you are installing a patch.
+
+8. If a fix can be identified from such investigation, and that fix involves applying one or
+more patches, then at least the change is minimized to just the patch or set of patches
+required to fix the problem.
+
+9. If a fix has been identified and a patch has been downloaded (see the Identifying and
+Downloading Patches That Are Appropriate for Proactive Patching section for information on
+downloading patches), Sun recommends that users use Solaris Live Upgrade to apply patches,
+when possible.
+
+10. See the Core Solaris Tools for Patching section for more information.
+
+11. Note : From the perspective of accessing patches, patches that address security issues
+remain free.
+
+12. Note : Both the Recommended and Sun Alert clusters contain only core Solaris OS patches.
+
+13. So do patches that provide new hardware drivers.
+
+14. Solaris Live Upgrade consists of a set of tools that enable users to create an alternate
+boot environment that is a mirror copy of the current boot partition and then patch the
+newly created boot partition prior to making it live.
+
+15. Patching during the installation phase requires that you use JumpStart.
+
+16. There is decrease in downtime because the only downtime that is needed is the time to boot
+between the current live partition and the newly patched partition.
+
+17. It is recommended that after the complete list of patches has been identified, the patches
+be installed one by one using just patchadd (without the -M option).
+
+18. (In other words, do not drop the -a option.) It is recommended that after the complete
+list of patches has been identified, the patches be installed one by one using just
+patchadd (without the -M option).
+
+19. If Solaris Live Upgrade is being used, it can also be used to apply the Recommended Patch
+Cluster.
+
+20. The images installed by Sun's manufacturers on servers are also based on the EIS patch
+baseline.
+
+21. Security patch management
+
+22. Solaris Patch Management: Recommended Strategy
+
+23. With the advent of the Solaris 10 Operating System, patches are used for the following
+purposes:
+
+24. This ensures that when the system boots, it has the latest patches installed and,
+therefore, avoids any known issues that are outstanding.
+
+25. It is highly likely that the patches identified will all be contained in the most recent
+Recommended Patch Cluster.
+
+26. The EIS patch baseline goes through QA testing prior to release.
+
+27. Customers must have a valid support contract to access most other Solaris patches,
+including the Solaris patch clusters, such as the Recommended Patch Cluster or the Sun
+Alert Patch Cluster.
+
+28. The recommended method of proactively applying patches is to use Solaris Live Upgrade.
+
+29. This section also provides access to all recent Sun Alerts along with Sun Alert patch
+reports.
+
+30. Note that the list of patches to apply to get Solaris Live Upgrade working in an
+environment with non-global zones is quite large, and they must be applied to the live
+running environment.
+
+31. Copy #patchadd -q -a -M .
+
+32. In the rest of this document, it is always assumed that the latest patch utilities patch
+has been applied first.
+
+33. If the system being reactively patched has non-global zones installed, you should apply
+all patches individually using luupgrade if you are using Solaris Live Upgrade.
+
+34. The smpatch command-line tool is part of the Solaris OS.
+
+35. It is strongly recommended that you do not apply patches using -M without the -a option,
+due to several bugs in the current implementation.
+
+36. Identifying patches that are applicable in a reactive patching scenario can often be
+complex.
+
+37. The following is a basic example of running patchadd -a -M: Copy #patchadd -a -M <dir
+containing patches> The -a argument instructs patchadd to do a dry run, so that no
+software gets installed and no changes are made to the system.
+
+38. No patchrm operation is needed.
+
+39. They do not contain patches for Sun Java Enterprise System, Sun Cluster software, Sun
+Studio software, or Sun N1, and they do not contain other non-Solaris OS patches that
+address security, data corruption, or system availability issues.
+
+40. Again, for customers without a valid support contract, only security and driver patches
+are available.
+
+41. Example 1 (applying an individual patch 119254-50): patch 119254-50 nfs://
+/export/images/SPARC/10_Recommended
+
+42. FAQ: Patching for the Solaris OS
+
+43. Documents in the Solaris 10 System Administrator Collection, for example, the System
+Administration Guide: Basic Administration, with a chapter on managing Solaris patches
+
+44. The EIS set of patches is based on the Recommended Patch Cluster for the Solaris OS with
+additional patches included by Sun Field Engineers for additional products and to address
+irritating issues that do not meet the criteria for inclusion in the Recommended Patch
+Cluster.
+
+45. These and other documents at http://docs.sun.com Solaris Patch Management: Recommended
+Strategy Documents in the Solaris 10 System Administrator Collection, for example, the
+System Administration Guide: Basic Administration, with a chapter on managing Solaris
+patches Sun Update Connection - Enterprise document collection Sun Explorer document
+collection Solaris 10 8/07 Installation Guide: Solaris Live Upgrade and Upgrade Planning
+Application Packaging Developer's Guide
+
+46. If additional patches are to be applied to a Solaris 10 system using patchadd, patchadd -a
+-M can be useful for identifying any missing requirements and identifying a valid
+installation order for the patches.
+
+47. In all cases of proactive patching, it is assumed that the system is already functioning
+normally.
+
+48. Identifying Patches for Reactive Patching
+
+49. Identifying and Downloading Patches That Are Appropriate for Proactive Patching
+
+50. Tools for Applying Security Patches The same rules apply to applying security patches as
+to proactively or reactively applying patches.
+
+51. It can be used to see what patches and updates are available and to easily select the
+patches that you want to install.
+
+52. |grep "Approved patches:" |sort -u \ |sed -e "s/Approved patches://g" > patch_order_file
+2>&1 #Cat patch_order_file 120900-03 121333-04 119254-50 #for i in 'cat patch_order-file'
+do patchadd $i done
+
+53. While this method of applying patches (using just patchadd as opposed to using Solaris
+Live Upgrade) has the major disadvantage of requiring you to patch the live system, which
+increases both downtime and risk, by using the -a option to inspect the patches before
+applying them against the actual system, you can reduce the risk.
+
+54. But any change to pre-existing code is always delivered in a patch.
+
+55. Training: Sun Connection Webinar (requires registration) Sun training courses at
+http://www.sun.com/training/, with modules about the fundamentals of package and patch
+administration: Make the Transition to the Solaris 10 Operating System (VC-SA-210-S10)
+Solaris Operating Environment Essentials for System Maintainers (SM-101) System
+Administration for the Solaris 10 Operating System Part 1 (SA-200-S10) Solaris 10 Features
+for Experienced Solaris System Administrators (SA-225-S10) Solaris System Administration
+for Experienced UNIX Administrators (STS-276) Sun Update Connection - Enterprise Technical
+Essentials (WET-1451)
+
+56. When you are in a reactive patching situation, you must try to minimize risk (change) at
+all costs.
+
+57. Unfortunately, even though this approach might work if the undiagnosed issue has already
+been root caused and a patch issued to fix the issue, if the approach does not work, you
+are often worse off than before you applied the patch or patches.
+
+58. Proactive Patch Management Strategy
+
+59. On systems where there are non-global zones, patching can still be done using Solaris Live
+Upgrade.
+
+60. Sun training courses at http://www.sun.com/training/, with modules about the fundamentals
+of package and patch administration: Make the Transition to the Solaris 10 Operating
+System (VC-SA-210-S10) Solaris Operating Environment Essentials for System Maintainers
+(SM-101) System Administration for the Solaris 10 Operating System Part 1 (SA-200-S10)
+Solaris 10 Features for Experienced Solaris System Administrators (SA-225-S10) Solaris
+System Administration for Experienced UNIX Administrators (STS-276) Sun Update Connection
+- Enterprise Technical Essentials (WET-1451)
+
+61. smpatch, Update Manager, and Sun Connection - Hosted Edition:
+
+62. These patches could be the latest Recommended Patch Cluster or one or more patches that
+appear to be appropriate.
+
+63. Sun also ships new hardware support in patches for much the same reason that Sun ships new
+functionality, that is, the need to get support for such hardware to market quickly and
+yet maintain a stable release model going forward.
+
+64. In comparison to reactive patching, which is explained in the Reactive Patch Management
+Strategy section, proactive patching, in general, implies more change as well as regularly
+scheduled maintenance windows.
+
+65. Copy #patchadd -a -M <dir containing patches>
+
+66. These support contracts entitle customers to access all patches, plus a wide range of
+additional support services.
+
+67. Sun also has a range of higher-level patch automation tools.
+
+68. With non-global zones, the -a option can help identify the following issues: Zones that
+cannot be booted Zones in which a given patch did not meet all the required dependencies
+In such cases, the problem must be identified and rectified before patching can commence.
+
+69. Note : Always make sure you apply the latest revision of the patch utilities patch first
+before adding any other patches.
+
+70. Proactive patching prevents systems from experiencing known issues.
+
+71. Customers can contact Sun Services to help develop an appropriate patch management
+strategy for their specific circumstances.
+
+72. The information in this section describes how to use the core Solaris Live Upgrade and
+patch utilities to patch a system.
+
+73. Pay particular attention to the patchadd -a -M output, and in particular make sure that
+all non-global zones passed the dependency tests.
+
+74. It provides a reliable and easy-to-use interface, and it can use a local patch server
+repository to speed up download.
+
+75. Core Solaris Tools for Patching
+
+76. Patch Automation Tools Here is a list of automated patching tools: Sun Connection 1.1.1
+Satellite Edition: Sun Connection 1.1.1 Satellite Edition is based on Aduva Onstage and
+Update Connection Enterprise.
+
+77. There are two main reasons why this approach is fundamentally incorrect: The first reason
+is that even if the problem appears to go away, you don't know whether the patch or
+patches actually fixed the underlying problem.
+
+78. In the case of patchadd, it is also recommended that you first run #patchadd -a to verify
+that all zones can be booted and that the specified patch is applicable in all zones.
+
+79. smpatch, Update Manager, and Sun Connection - Hosted Edition: The smpatch command-line
+tool is part of the Solaris OS.
+
+80. It allows customers to analyze and update the Solaris OS with current patches.
+
+81. As explained earlier, the -a option does a dry run, so no patches will actually get
+installed.
+
+82. The EIS set of patches, which are considered by Sun Field Engineers as best practice to
+install on a new system, can also be used to patch existing systems to the same patch
+level.
+
+83. Security patch management requires a separate strategy, because it requires you to be
+proactive and yet it requires a sense of urgency.
+
+84. The following JumpStart profile examples might be of use: Example 1 (applying an
+individual patch 119254-50): patch 119254-50 nfs:// /export/images/SPARC/10_Recommended
+Applying the 10_Recommended cluster during JumpStart: patch patch_order nfs://
+/export/10_Recommended retry 5 Patches can also be applied using finish scripts, as shown
+in example 4-4 in Creating Finish Scripts.
+
+85. The same rules apply to applying security patches as to proactively or reactively applying
+patches.
+
+86. Introduction Patch management is a quite complex and involved topic.
+
+87. Proactive patching is recommended mainly for the following reasons: Proactive patching
+reduces unplanned downtime.
+
+88. Tools for Applying Patches in a Reactive Patching Scenario If a fix has been identified
+and a patch has been downloaded (see the Identifying and Downloading Patches That Are
+Appropriate for Proactive Patching section for information on downloading patches), Sun
+recommends that users use Solaris Live Upgrade to apply patches, when possible.
+
+89. Note : The -M option to patchadd is available only in the Solaris 10 FCS (03/05) release
+and later.
+
+90. The -a argument instructs patchadd to do a dry run, so that no software gets installed and
+no changes are made to the system.
+
+91. Once patched, the new boot partition can be booted.
+
+92. If you need to apply the patch or patches immediately (or the issue impacts Solaris Live
+Upgrade itself), you should first run patchadd with the -a option (since -a does a dry run
+and does not modify the system).
+
+93. In such cases, the problem must be identified and rectified before patching can commence.
+
+94. Patch Management Best Practices Enda O'Connor, April 2008
+
+95. Proactive Patching on Systems With Non-global Zones On systems where there are non-global
+zones, patching can still be done using Solaris Live Upgrade.
+
+96. Proactive patching is recommended mainly for the following reasons:
+
+97. Proactive patching provides the ability to plan ahead and do appropriate testing before
+deployment.
+
+98. You can register all your servers and you can schedule and review the installation of
+patches from a central portal.
+
+99. For More Information Here are additional resources: Training: Sun Connection Webinar
+(requires registration) Sun training courses at http://www.sun.com/training/, with modules
+about the fundamentals of package and patch administration: Make the Transition to the
+Solaris 10 Operating System (VC-SA-210-S10) Solaris Operating Environment Essentials for
+System Maintainers (SM-101) System Administration for the Solaris 10 Operating System Part
+1 (SA-200-S10) Solaris 10 Features for Experienced Solaris System Administrators
+(SA-225-S10) Solaris System Administration for Experienced UNIX Administrators (STS-276)
+Sun Update Connection - Enterprise Technical Essentials (WET-1451) These and other
+documents at http://docs.sun.com Solaris Patch Management: Recommended Strategy Documents
+in the Solaris 10 System Administrator Collection, for example, the System Administration
+Guide: Basic Administration, with a chapter on managing Solaris patches Sun Update
+Connection - Enterprise document collection Sun Explorer document collection Solaris 10
+8/07 Installation Guide: Solaris Live Upgrade and Upgrade Planning Application Packaging
+Developer's Guide Related sites and resources: These and other BigAdmin resources: FAQ:
+Patching for the Solaris OS Overview of Solaris Patch Types and Dependencies How To Use
+Solaris Live Upgrade to Install Patches
+
+100. Identifying and Downloading Patches That Are Appropriate for Proactive Patching The
+recommended way of tracking issues relevant to proactive patching is to register to
+receive Sun Alerts, which can be done on the SunSolve home page under the Sun Alerts
+section.
+
+101. Applying the 10_Recommended cluster during JumpStart: patch patch_order nfs://
+/export/10_Recommended retry 5
+
+102. Patches can also be applied using finish scripts, as shown in example 4-4 in Creating
+Finish Scripts.
+
+103. Tools for Applying Patches in a Reactive Patching Scenario
+
+104. The second -t is actually being passed to patchadd through the -O option to luupgrade.
+
+105. People most often associate patches with delivering bug fixes only, and while this might
+have been true in early Solaris releases, this has progressively ceased to be the case.
+
+106. Patching is not done on the live partition, so the system can continue in production until
+it is suitable to boot to the newly patched partition.
+
+107. Here is an example of using patchadd in a loop, where patch_order_file is the ordered list
+from patchadd -a -M:
+
+108. New functionality, such as ZFS and NewBoot, is delivered entirely by patches, enabling
+businesses to take advantage of the new functionality without having to upgrade to a newer
+release of the Solaris OS.
+
+109. Using Solaris Live Upgrade is covered in more detail in the Core Solaris Tools for
+Patching section.
+
+110. This article covers the following topics: Patch Content People most often associate
+patches with delivering bug fixes only, and while this might have been true in early
+Solaris releases, this has progressively ceased to be the case.
+
+111. Why patch a system that is functioning normally, since any change implies risk, which in
+itself implies downtime?
+
+112. It covers the provisioning of patches, packages, configuration files, and scripts.
+
+113. The main goal in proactive patch management is to prevent unplanned downtime or, in other
+words, problem prevention.
+
+114. Tools for Applying Security Patches
+
+115. Otherwise, use just patchadd.
+
+116. Here is a list of automated patching tools:
+
+117. Proactive Patch Management Strategy The main goal in proactive patch management is to
+prevent unplanned downtime or, in other words, problem prevention.
+
+118. If you are running a Solaris 10 release prior to 08/07, you need to add the Solaris 08/07
+Solaris Live Upgrade packages to the live system and then apply a list of patches that are
+required in order to get Solaris Live Upgrade working in an environment that has non-
+global zones deployed.
+
+119. For customers with a valid support contract, all patches are available.
+
+120. The four basic strategies outlined here are as follows: Proactive patch management
+Reactive patch management Security patch management Installing a new system We will
+discuss the tools most appropriate to each strategy, where to locate the patches or patch
+clusters to apply, and any useful information and tips that are appropriate to a given
+strategy.
+
+121. This option provides a good way for customers to patch a defined and tested patch
+baseline.
+
+122. Depending on the severity of the problem, the patch or patches that fix the issue will be
+installed at one of the following times: Immediately to gain relief At the next regular
+maintenance window, if the problem is not critical or a workaround exists During an
+emergency maintenance window that is brought forward to facilitate applying the fix
+earlier Identifying Patches for Reactive Patching Identifying patches that are applicable
+in a reactive patching scenario can often be complex.
+
+123. The benefits of using Solaris Live Upgrade are the following: There is decrease in
+downtime because the only downtime that is needed is the time to boot between the current
+live partition and the newly patched partition.
+
+124. In addition to using the core Solaris Live Upgrade and patch utilities to patch a system,
+Sun also has a range of higher-level patch automation tools.
+
+125. For the Solaris 10 OS, the patch utilities patches are as follows: SPARC: 119254-xx X86:
+119255-xx Note : From the perspective of accessing patches, patches that address security
+issues remain free.
+
+126. Depending on the severity of the problem, the patch or patches that fix the issue will be
+installed at one of the following times:
+
+127. These and other BigAdmin resources: FAQ: Patching for the Solaris OS Overview of Solaris
+Patch Types and Dependencies How To Use Solaris Live Upgrade to Install Patches
+
+128. The recommended approach is to use Solaris Live Upgrade; otherwise, use patchadd.
+
+129. The most common response to such a situation is usually to apply the latest patch or
+patches, which might be perceived as being capable of fixing the issue.
+
+130. Sun Connection 1.1.1 Satellite Edition provides a solution for customers primarily
+interested in patch and package provisioning.
+
+131. It instructs patchadd to skip patch dependency verification.
+
+132. Update Manager ( updatemanager ) is a GUI wrapper around smpatch and it is also part of
+the Solaris OS.
+
+133. In some cases, the Special Install Instructions are updated after the patch has been
+released to SunSolve, in order to clarify issues surrounding the particular patch
+installation or to notify users of newly identified issues.
+
+134. |grep "Approved patches:" |sort -u \ |sed -e "s/Approved patches://g" > patch_order_file
+2>&1 #Cat patch_order_file 120900-03 121333-04 119254-50 #for i in 'cat patch_order-file'
+do patchadd $i done In this patchadd -q -a example, -q instructs patchadd to run in
+"quiet" mode and also output headings for the installable patches, which are called
+"Approved patches." While this method of applying patches (using just patchadd as opposed
+to using Solaris Live Upgrade) has the major disadvantage of requiring you to patch the
+live system, which increases both downtime and risk, by using the -a option to inspect the
+patches before applying them against the actual system, you can reduce the risk.
+
+135. The first reason is that even if the problem appears to go away, you don't know whether
+the patch or patches actually fixed the underlying problem.
+
+136. Reactive patch management
+
+137. Proactive patching reduces unplanned downtime.
+
+138. The idea behind proactive patching is that in most cases, problems that can occur have
+already been identified and patches have already been released.
+
+139. See the Patch Automation Tools section for more information.
+
+140. Patch management is a quite complex and involved topic.
+
+141. Here is an example of using patchadd in a loop, where patch_order_file is the ordered list
+from patchadd -a -M: Copy #patchadd -q -a -M .
+
+142. Probably the best time to proactively patch a system is while it is being installed.
+
+143. Proactive patch management
+
+144. Basically, reactive patching occurs in response to an issue that is currently affecting
+the running system and that needs immediate relief.
+
+145. So, Sun ships some new functionality in standard patches.
+
+146. If Solaris Live Upgrade is not applicable to the system being patched, it is recommended
+that the appropriate patches are downloaded and all requirements are identified, and then
+the patches can be applied using only patchadd.
+
+147. One caveat is that you must pass the -t option into patchadd using the -O option to
+luupgrade, for example: #cd 10_Recommended #luupgrade -t -n be3 -O -t -s .
+
+148. Installing a New System Probably the best time to proactively patch a system is while it
+is being installed.
+
+149. Due to current issues with patchadd -M, it is recommended that you do not run patchadd -M
+without the -a option, because doing so can lead to unrecoverable errors.
+
+150. Such issues can include the following: Memory corruption that has not yet caused a problem
+Data corruption, most of which is silent until such data is read back in Latent security
+issues Panics due to code paths that have not been exercised before Security issues are a
+good example of the value of proactive patching.
+
+151. Unfortunately, there is no one patch management plan that fits all situations.
+
+152. The following is a basic example of running patchadd -a -M:
+
+153. In proactive patching, you can and should have tested the change you are applying.
+
+154. In the event that issues occur with the EIS patch baseline, recommendations are
+communicated to the EIS community.
+
+155. In this patchadd -q -a example, -q instructs patchadd to run in "quiet" mode and also
+output headings for the installable patches, which are called "Approved patches."
+
+156. In the case of systems that have non-global zones configured, it is recommended that you
+apply patches individually using just patchadd.
+
+157. For More Information Here are additional resources: Training: Sun Connection Webinar
+(requires registration) Sun training courses at http://www.sun.com/training/, with modules
+about the fundamentals of package and patch administration: Make the Transition to the
+Solaris 10 Operating System (VC-SA-210-S10) Solaris Operating Environment Essentials for
+System Maintainers (SM-101) System Administration for the Solaris 10 Operating System Part
+1 (SA-200-S10) Solaris 10 Features for Experienced Solaris System Administrators
+(SA-225-S10) Solaris System Administration for Experienced UNIX Administrators (STS-276)
+Sun Update Connection - Enterprise Technical Essentials (WET-1451) These and other
+documents at http://docs.sun.com Solaris Patch Management: Recommended Strategy Documents
+in the Solaris 10 System Administrator Collection, for example, the System Administration
+Guide: Basic Administration, with a chapter on managing Solaris patches Sun Update
+Connection - Enterprise document collection Sun Explorer document collection Solaris 10
+8/07 Installation Guide: Solaris Live Upgrade and Upgrade Planning Application Packaging
+Developer's Guide Related sites and resources: These and other BigAdmin resources: FAQ:
+Patching for the Solaris OS Overview of Solaris Patch Types and Dependencies How To Use
+Solaris Live Upgrade to Install Patches Resources for Careers Developers Investors
+Partners Researchers Students and Educators Why Oracle Analyst Reports Best cloud-based
+ERP Cloud Economics Social Impact Security Practices Learn What is a sovereign cloud?
+
+158. If you are already running the Solaris 08/07 OS, then Solaris Live Upgrade can be used to
+apply patches without any further issue.
+
+159. For customers without a valid support contract, only security and driver patches are
+available.
+
+160. Security issues are a good example of the value of proactive patching.
+
+161. Overview of Solaris Patch Types and Dependencies
+
+162. To facilitate applying multiple patches, you can use patchadd -a -M to produce an ordered
+list of patches that can be installed individually using patchadd.
+
+163. With the advent of the Solaris 10 Operating System, patches are used for the following
+purposes: Deliver bug fixes.
+
+164. Note : It is strongly advised that you read the Special Install Instructions for all
+patches prior to installing them.
+
+165. Sun strongly recommends that proactive patching be the strategy of choice in those
+situations where it is applicable.
+
+166. Oracle.com QUICK LINKS Oracle Cloud Infrastructure Oracle Fusion Cloud Applications Oracle
+AI Database Download Java Careers at Oracle Search Country View Accounts Back Cloud
+Account Sign in to Cloud Sign Up for Free Cloud Tier Oracle Account Sign-In Create an
+Account Help Sign Out Contact Sales Menu Patch Management Best Practices Enda O'Connor,
+April 2008 IT Infrastructure Technical Details Technical Article Introduction Patch
+management is a quite complex and involved topic.
+
+167. All of these changes require modifications to existing patch management plans.
+
+168. Proactive Patching on Systems With Non-global Zones
+
+169. The second reason is that applying patches in a reactive patching session introduces an
+element of risk.
+
+170. Reactive Patch Management Strategy
+
+171. At no stage when patching a system with non-global zones should you use the -M option to
+patchadd, nor should you try to apply a list of patches using an order file and luupgrade.
+
+172. Then inspect the output from patchadd -a prior to actually installing the patch or
+patches.
+
+173. The patches might have simply changed the system in such a way as to obscure the issue for
+now, and the problem could recur later.
+
+174. How To Use Solaris Live Upgrade to Install Patches
+
+175. Skip to content Accessibility Policy Products Industries Resources Customers Partners
+Developers Company Close Search Oracle.com QUICK LINKS Oracle Cloud Infrastructure Oracle
+Fusion Cloud Applications Oracle AI Database Download Java Careers at Oracle Search
+Country View Accounts Back Cloud Account Sign in to Cloud Sign Up for Free Cloud Tier
+Oracle Account Sign-In Create an Account Help Sign Out Contact Sales Menu Patch Management
+Best Practices Enda O'Connor, April 2008 IT Infrastructure Technical Details Technical
+Article Introduction Patch management is a quite complex and involved topic.
+
+176. If Solaris Live Upgrade is not an acceptable option, then Sun recommends that you use the
+same method outlined in the Core Solaris Tools for Patching section, that is, identify all
+the patches required and use patchadd -a -M to identify any missing requirements.
+
+177. For the Solaris 10 OS, the patch utilities patches are as follows:
+
+178. One caveat is that you must pass the -t option into patchadd using the -O option to
+luupgrade, for example:
+
+179. Zones in which a given patch did not meet all the required dependencies
+
+180. The output from the command is verbose but consists of an ordered list of patches that can
+be installed, plus it clearly identifies any patches that cannot be installed due to
+dependencies that must be satisfied first.
+
+181. Reactive Patch Management Strategy Basically, reactive patching occurs in response to an
+issue that is currently affecting the running system and that needs immediate relief.
+
+182. The recommended way of tracking issues relevant to proactive patching is to register to
+receive Sun Alerts, which can be done on the SunSolve home page under the Sun Alerts
+section.
+
+183. This document goes through some basic scenarios for creating a patch management strategy
+for any given organization.
+
+184. Security Patch Management Security patch management requires a separate strategy, because
+it requires you to be proactive and yet it requires a sense of urgency.
+
+185. The EIS patch baseline covers the Solaris OS and other products, such as Sun Cluster
+software, SunVTS software, System Service Processor (SSP), System Management Services
+(SMS), Sun StorageTek QFS software, Sun StorageTek SAM-FS software, and it includes
+patches that provide firmware updates.
+
+186. See the section Patch Automation Tools for more information.
+
+187. We will discuss the tools most appropriate to each strategy, where to locate the patches
+or patch clusters to apply, and any useful information and tips that are appropriate to a
+given strategy.
+
+188. When using Solaris Live Upgrade is not an option, the Recommended Patch Cluster can be
+installed using the cluster_install script that comes with the Cluster.
+
+189. Related sites and resources: These and other BigAdmin resources: FAQ: Patching for the
+Solaris OS Overview of Solaris Patch Types and Dependencies How To Use Solaris Live
+Upgrade to Install Patches
+
+190. Also, there's a greater chance that the changes you applied will have negative
+consequences elsewhere on the system, which lead to more reactive patching.
+
+191. If more than one patch is being installed, you can use patchadd -a -M to produce an
+ordered list of patches, which should then be installed individually using just patchadd.
+
+192. Some organizations have specific guidelines on change management that must be adhered to
+when developing a patch management plan.
+
+193. For the same reason, it is also recommended that you not use luupgrade -t to apply a list
+of patches using an order file, because it uses patchadd -M internally.
+
+194. Additional testing by Sun's manufacturers plus feedback from the EIS user community raises
+confidence in the EIS patch baseline further.
+
+195. Patch Automation Tools
+
+196. But once this is done, Solaris Live Upgrade can be used to patch going forward, as normal,
+with all the benefits that Solaris Live Upgrade provides.
+
+197. Patch Check Advanced (PCA): PCA is a popular third party tool developed by Martin Paul.
+
+
+
+ORACLE DATABASE MONITORING
+================================
+
+1. Oracle Database. Table 7-1 Database Monitoring Tools Tool Functionality Event Viewer
+Monitor database events.
+
+2. Parent topic: Monitoring a Database on Windows Using Event Viewer Learn how to use Event
+Viewer.
+
+3. Oracle Sales or Cloud Support using the Chat link in the menu bar. The Oracle Sales team
+can help you sign up for Oracle Cloud Free Tier. Who is eligible for Oracle Cloud Free
+Tier? One Oracle Cloud Free Trial or Always Free account is permitted per person. Please
+note: Creating or attempting to create multiple free accounts is prohibited. All contact
+and billing information provided must be accurate, valid, and used with consent for the
+duration of the account. Failure to comply with these requirements may result in the
+suspension or termination of your account. Why do I need to provide credit or debit card
+information when I sign up for Oracle Cloud Free Tier? To provide free Oracle Cloud
+accounts to our valued customers, we need to ensure that you are who you say you are. We
+use your contact information and credit/debit card information for account setup and
+identity verification. Oracle may periodically check the validity of your card, resulting
+in a temporary “authorization” hold. These holds are removed by your bank, typically
+within three to five days, and do not result in actual charges to your account. What
+payment methods does Oracle accept? We accept credit cards and debit cards that function
+like credit cards. We do not accept debit cards with a PIN or virtual, single-use, or
+prepaid cards. What is the advantage of moving to Pay As You Go accounts after the trial?
+You have access to customer support to open tickets and troubleshoot account issues. Pay
+As You Go accounts are subject to different capacity limits than Always Free accounts. As
+you move from development and testing to production scenarios, you may need to use
+resources outside of Always Free limits. You will have access to the latest portfolio of
+OCI services, such as artificial intelligence, and you only pay for what you use. How do I
+know how much I am going be charged for Pay As You Go services? You will only be charged
+for services that you use that exceeds Always Free. You can find information about costs
+in the Oracle Cloud Price List and the Oracle cloud cost estimator . View all Oracle Cloud
+Free Tier FAQ *Free Tier is generally available in regions where commercial Oracle Cloud
+Infrastructure service is available See the data regions page for detailed service
+availability (Exact regions available for Free Tier may differ during signup process). The
+US$300 cloud credit is available in select countries and valid for up to 30 days. Cloud
+credits consumption can be subject to discounted rates during the 30-day promotional
+period. ** Availability to Free Tier is subject to capacity limits. The capacity limits
+listed under each service are only estimates and reflect the maximum capacity you can get
+if you consume your entire credit on one service during the promotional period. The
+maximum capacity per service you get can be less if you consume multiple services. The
+list of services and capacity estimates are subject to change. Your credit balance is
+available to you in the Oracle Cloud Infrastructure Console. Resources for Careers
+Developers Investors Partners Startups Students and Educators Why Oracle Analyst Reports
+Cloud Economics with Microsoft Azure vs. AWS vs. Google Cloud vs. MongoDB Learn What is
+AI? What is Cloud Computing? What is Cloud Storage? What is HPC? What is IaaS? What is
+PaaS? What’s new Oracle Cloud Free Tier Cloud Architecture Center Cloud Lift Oracle
+Support Rewards Oracle Red Bull Racing Contact us Sales: +1.800.633.0738 How can we help?
+Subscribe to emails Events News OCI Blog Country/Region © 2026 Oracle Privacy / Do Not
+Sell My Info Ad Choices Careers Facebook Twitter LinkedIn YouTube Frequently asked
+questions Open all Close all What is Oracle Cloud Free Tier? Oracle Cloud Free Tier allows
+you to sign up for an Oracle Cloud account which provides a number of Always Free services
+and a Free Trial with US$300 of free credit to use on all eligible Oracle Cloud
+Infrastructure services for up to 30 days. The Always Free services are available for an
+unlimited period of time. The Free Trial services may be used until your US$300 of free
+credits are consumed or the 30 days has expired, whichever comes first. What are Always
+Free Services? Always Free services are part of Oracle Cloud Free Tier. Always Free
+services are available for an unlimited time. Some limitations apply. As new Always Free
+services become available, you will automatically be able to use those as well. The
+following services are available as Always Free: HeatWave AMD-based Compute Arm-based
+Ampere A1 Compute Block Volume Object Storage Archive Storage Flexible Load Balancer
+Flexible Network Load Balancer Site-to-Site VPN Autonomous Data Warehouse Autonomous
+Transaction Processing Autonomous JSON Database NoSQL Database (Phoenix Region only) APEX
+Application Development Resource Manager (Terraform) Monitoring Notifications Logging
+Application Performance Monitoring Service Connector Hub Vault Bastions Security Advisor
+Virtual Cloud Networks Site-to-Site VPN Content Management Starter Edition Email Delivery
+Is Oracle Cloud Free Tier available in all countries? Oracle Cloud Free Tier is currently
+available in all regions where commercial Oracle Cloud Infrastructure service is
+available.
+
+4. The following services are available as Always Free: HeatWave AMD-based Compute Arm-based
+Ampere A1 Compute Block Volume Object Storage Archive Storage Flexible Load Balancer
+Flexible Network Load Balancer Site-to-Site VPN Autonomous Data Warehouse Autonomous
+Transaction Processing Autonomous JSON Database NoSQL Database (Phoenix Region only) APEX
+Application Development Resource Manager (Terraform) Monitoring Notifications Logging
+Application Performance Monitoring Service Connector Hub Vault Bastions Security Advisor
+Virtual Cloud Networks Site-to-Site VPN Content Management Starter Edition Email Delivery
+Is Oracle Cloud Free Tier available in all countries?
+
+5. Includes a complete JRE plus tools for developing, debugging, and monitoring Java
+applications.
+
+6. Performance Monitoring Service Connector Hub Vault Bastions Security Advisor Virtual Cloud
+Networks Site-to-Site VPN Content Management Starter Edition Email Delivery Is Oracle
+Cloud Free Tier available in all countries? Oracle Cloud Free Tier is currently available
+in all regions where commercial Oracle Cloud Infrastructure service is available.
+
+7. Performance Monitoring Service Connector Hub Vault Bastions Security Advisor Virtual Cloud
+Networks Site-to-Site VPN Content Management Starter Edition Email Delivery Always Free
+services are part of Oracle Cloud Free Tier.
+
+8. Database Monitoring Tools Database Monitoring Tools describes tools that enable you to
+monitor Oracle Database.
+
+9. Oracle Database for Windows instance has one alert log; information is appended to the
+file each time you start the instance. All threads can write to the alert log . For
+example, when automatic archiving of redo logs is halted because no disk space is
+available, a message is placed in the alert log. The alert log is the first place to check
+if something goes wrong with the database and the cause is not immediately obvious. The
+alert log is named alert_ SID .log and is found in the ADR directory specified by the
+parameter DIAGNOSTIC_DEST in the initialization parameter file. Alert logs must be deleted
+or archived periodically. Related Topics Modifying the Initialization Parameter File See
+Also: Oracle Database Installation Guide for Microsoft Windows in the "ADMIN Directory"
+section. Parent topic: Monitoring a Database on Windows Alert logs contain important
+information about error messages and exceptions that occur during database operations.
+
+10. Database Monitoring Tools Previous Next JavaScript must be enabled to correctly display
+this content Administrator's Reference Monitoring a Database on Windows Overview of
+Database Monitoring Tools Overview of Database Monitoring Tools Database Monitoring Tools
+describes tools that enable you to monitor Oracle Database.
+
+11. Oracle Database for Windows problems and other significant occurrences are recorded as
+events in an application event log. View and manage these recorded events in Event Viewer.
+Using Event Viewer Learn how to use Event Viewer. Managing Event Viewer Learn how to
+manage Event Viewer. Reading Event Viewer Learn how to read an Event Viewer. Parent topic:
+Monitoring a Database on Windows Using Event Viewer Learn how to use Event Viewer.
+
+12. Database Monitoring Tools Monitor database events.
+
+13. Oracle Cloud Free Tier | Oracle Accessibility Policy Skip to content About Services
+Solutions Pricing Partners Resources Close Search Oracle.com QUICK LINKS Oracle Cloud
+Infrastructure Oracle Fusion Cloud Applications Oracle Database Download Java Careers at
+Oracle Search Country Menu Contact Sales Sign in to Oracle Cloud Oracle Cloud Free Tier
+Build, test, and deploy applications on Oracle Cloud—for free. Start for free Sign in to
+Oracle Cloud Here is how Oracle Cloud Free Tier works 1 Start with a US$300 cloud credit.*
+You’ll have 30 days to use it to test your applications on all OCI services, in addition
+to Always Free Services in your Free Tier account. 2 At any time during or after the
+30-day period,* switch to a Pay As You Go account. Pay only for services that exceed the
+monthly free amounts from Always Free Services. 3 If you do nothing after 30 days, you’ll
+continue to get Always Free Services in your Free Tier account. Oracle Cloud Free Tier Get
+cloud credits and start using Oracle Cloud services. Sign up now Services available on
+Oracle Cloud Free Tier Featured Product Tier Type Always Free Trial Product Category
+Filtered by: No Filters applied Clear all Here are some resources to enhance your Oracle
+Cloud Free Tier experience Developer Resource Center Discover, learn, and build. Create
+common apps and grow with generative AI. Enjoy unmatched capabilities. Learn more about
+Developer Resource Center Oracle Architecture Center Design and implement your workloads
+faster and more efficiently with reference architectures, quick-start guides, and other
+resources. Learn more about Oracle Architecture Center Free training and accreditation The
+Oracle Learning Explorer program offers entry-level training courses and accreditation for
+Oracle's entire product portfolio. Learn more about Free training and accreditation
+Frequently asked questions Open all Close all What is Oracle Cloud Free Tier? Oracle Cloud
+Free Tier allows you to sign up for an Oracle Cloud account which provides a number of
+Always Free services and a Free Trial with US$300 of free credit to use on all eligible
+Oracle Cloud Infrastructure services for up to 30 days. The Always Free services are
+available for an unlimited period of time. The Free Trial services may be used until your
+US$300 of free credits are consumed or the 30 days has expired, whichever comes first.
+What are Always Free Services? Always Free services are part of Oracle Cloud Free Tier.
+Always Free services are available for an unlimited time. Some limitations apply. As new
+Always Free services become available, you will automatically be able to use those as
+well. The following services are available as Always Free: HeatWave AMD-based Compute Arm-
+based Ampere A1 Compute Block Volume Object Storage Archive Storage Flexible Load Balancer
+Flexible Network Load Balancer Site-to-Site VPN Autonomous Data Warehouse Autonomous
+Transaction Processing Autonomous JSON Database NoSQL Database (Phoenix Region only) APEX
+Application Development Resource Manager (Terraform) Monitoring Notifications Logging
+Application Performance Monitoring Service Connector Hub Vault Bastions Security Advisor
+Virtual Cloud Networks Site-to-Site VPN Content Management Starter Edition Email Delivery
+Is Oracle Cloud Free Tier available in all countries? Oracle Cloud Free Tier is currently
+available in all regions where commercial Oracle Cloud Infrastructure service is
+available.
+
+14. Alert Logs Previous Next JavaScript must be enabled to correctly display this content
+Administrator's Reference Monitoring a Database on Windows About Alert Logs About Alert
+Logs Alert logs contain important information about error messages and exceptions that
+occur during database operations.
+
+15. Parent topic: Monitoring a Database on Windows
+
+16. Learn how to monitor Oracle Database for Windows.
+
+17. Oracle Database. About Event Viewer Oracle Database for Windows problems and other
+significant occurrences are recorded as events in an application event log. About Trace
+Files Oracle Database for Windows background threads use trace files to record occurrences
+and exceptions of database operations, and errors. About Alert Logs Alert logs contain
+important information about error messages and exceptions that occur during database
+operations. Viewing Oracle Database Thread Information To view information about Oracle
+Database threads using Oracle Administration Assistant for Windows, you must either enable
+Windows native authentication for the database or run the utility ocfgutil.exe with
+arguments username and password . Learn how to monitor Oracle Database for Windows.
+
+18. HeatWave AMD-based Compute Arm-based Ampere A1 Compute Block Volume Object Storage Archive
+Storage Flexible Load Balancer Flexible Network Load Balancer Site-to-Site VPN Autonomous
+Data Warehouse Autonomous Transaction Processing Autonomous JSON Database NoSQL Database
+(Phoenix Region only) APEX Application Development Resource Manager (Terraform) Monitoring
+Notifications Logging Application Performance Monitoring Service Connector Hub Vault
+Bastions Security Advisor Virtual Cloud Networks Site-to-Site VPN Content Management
+Starter Edition Email Delivery
+
+19. Oracle Enterprise Manager documentation set for more information Oracle Administration
+Assistant for Windows View information about or terminate any Oracle thread. Table 7-1
+Database Monitoring Tools Monitor database events.
+
+20. Database Monitoring Tools Tool Functionality Event Viewer Monitor database events.
+
+21. Oracle Java SE Linux Solaris Windows Product/file description File size Download x64
+Compressed Archive 53.13 MB server-jre-8u481-linux-x64.tar.gz Product/file description
+File size Download SPARC 64-bit 65.18 MB server-jre-8u481-solaris-sparcv9.tar.gz x64
+Compressed Archive 63.12 MB server-jre-8u481-solaris-x64.tar.gz Product/file description
+File size Download x64 Compressed Archive 52.70 MB server-jre-8u481-windows-x64.zip Which
+Java 8 package do I need? Software developers: Java SE Development Kit (JDK) For Java
+developers. Includes a complete JRE plus tools for developing, debugging, and monitoring
+Java applications.
+
+22. Oracle Sales or Cloud Support using the Chat link in the menu bar. The Oracle Sales team
+can help you sign up for Oracle Cloud Free Tier. Who is eligible for Oracle Cloud Free
+Tier? One Oracle Cloud Free Trial or Always Free account is permitted per person. Please
+note: Creating or attempting to create multiple free accounts is prohibited. All contact
+and billing information provided must be accurate, valid, and used with consent for the
+duration of the account. Failure to comply with these requirements may result in the
+suspension or termination of your account. Why do I need to provide credit or debit card
+information when I sign up for Oracle Cloud Free Tier? To provide free Oracle Cloud
+accounts to our valued customers, we need to ensure that you are who you say you are. We
+use your contact information and credit/debit card information for account setup and
+identity verification. Oracle may periodically check the validity of your card, resulting
+in a temporary “authorization” hold. These holds are removed by your bank, typically
+within three to five days, and do not result in actual charges to your account. What
+payment methods does Oracle accept? We accept credit cards and debit cards that function
+like credit cards. We do not accept debit cards with a PIN or virtual, single-use, or
+prepaid cards. What is the advantage of moving to Pay As You Go accounts after the trial?
+You have access to customer support to open tickets and troubleshoot account issues. Pay
+As You Go accounts are subject to different capacity limits than Always Free accounts. As
+you move from development and testing to production scenarios, you may need to use
+resources outside of Always Free limits. You will have access to the latest portfolio of
+OCI services, such as artificial intelligence, and you only pay for what you use. How do I
+know how much I am going be charged for Pay As You Go services? You will only be charged
+for services that you use that exceeds Always Free. You can find information about costs
+in the Oracle Cloud Price List and the Oracle cloud cost estimator . What are Always Free
+Services? Always Free services are part of Oracle Cloud Free Tier. Always Free services
+are available for an unlimited time. Some limitations apply. As new Always Free services
+become available, you will automatically be able to use those as well. The following
+services are available as Always Free: HeatWave AMD-based Compute Arm-based Ampere A1
+Compute Block Volume Object Storage Archive Storage Flexible Load Balancer Flexible
+Network Load Balancer Site-to-Site VPN Autonomous Data Warehouse Autonomous Transaction
+Processing Autonomous JSON Database NoSQL Database (Phoenix Region only) APEX Application
+Development Resource Manager (Terraform) Monitoring Notifications Logging Application
+Performance Monitoring Service Connector Hub Vault Bastions Security Advisor Virtual Cloud
+Networks Site-to-Site VPN Content Management Starter Edition Email Delivery Always Free
+services are part of Oracle Cloud Free Tier.
+
+23. Table 7-1 Database Monitoring Tools
+
+24. Oracle Sales or Cloud Support using the Chat link in the menu bar. The Oracle Sales team
+can help you sign up for Oracle Cloud Free Tier. Who is eligible for Oracle Cloud Free
+Tier? One Oracle Cloud Free Trial or Always Free account is permitted per person. Please
+note: Creating or attempting to create multiple free accounts is prohibited. All contact
+and billing information provided must be accurate, valid, and used with consent for the
+duration of the account. Failure to comply with these requirements may result in the
+suspension or termination of your account. Why do I need to provide credit or debit card
+information when I sign up for Oracle Cloud Free Tier? To provide free Oracle Cloud
+accounts to our valued customers, we need to ensure that you are who you say you are. We
+use your contact information and credit/debit card information for account setup and
+identity verification. Oracle may periodically check the validity of your card, resulting
+in a temporary “authorization” hold. These holds are removed by your bank, typically
+within three to five days, and do not result in actual charges to your account. What
+payment methods does Oracle accept? We accept credit cards and debit cards that function
+like credit cards. We do not accept debit cards with a PIN or virtual, single-use, or
+prepaid cards. What is the advantage of moving to Pay As You Go accounts after the trial?
+You have access to customer support to open tickets and troubleshoot account issues. Pay
+As You Go accounts are subject to different capacity limits than Always Free accounts. As
+you move from development and testing to production scenarios, you may need to use
+resources outside of Always Free limits. You will have access to the latest portfolio of
+OCI services, such as artificial intelligence, and you only pay for what you use. How do I
+know how much I am going be charged for Pay As You Go services? You will only be charged
+for services that you use that exceeds Always Free. You can find information about costs
+in the Oracle Cloud Price List and the Oracle cloud cost estimator . View all Oracle Cloud
+Free Tier FAQ Frequently asked questions Open all Close all What is Oracle Cloud Free
+Tier? Oracle Cloud Free Tier allows you to sign up for an Oracle Cloud account which
+provides a number of Always Free services and a Free Trial with US$300 of free credit to
+use on all eligible Oracle Cloud Infrastructure services for up to 30 days. The Always
+Free services are available for an unlimited period of time. The Free Trial services may
+be used until your US$300 of free credits are consumed or the 30 days has expired,
+whichever comes first. What are Always Free Services? Always Free services are part of
+Oracle Cloud Free Tier. Always Free services are available for an unlimited time. Some
+limitations apply. As new Always Free services become available, you will automatically be
+able to use those as well. The following services are available as Always Free: HeatWave
+AMD-based Compute Arm-based Ampere A1 Compute Block Volume Object Storage Archive Storage
+Flexible Load Balancer Flexible Network Load Balancer Site-to-Site VPN Autonomous Data
+Warehouse Autonomous Transaction Processing Autonomous JSON Database NoSQL Database
+(Phoenix Region only) APEX Application Development Resource Manager (Terraform) Monitoring
+Notifications Logging Application Performance Monitoring Service Connector Hub Vault
+Bastions Security Advisor Virtual Cloud Networks Site-to-Site VPN Content Management
+Starter Edition Email Delivery Is Oracle Cloud Free Tier available in all countries?
+Oracle Cloud Free Tier is currently available in all regions where commercial Oracle Cloud
+Infrastructure service is available.
+
+25. Oracle Database for Windows events are displayed with a source of Oracle. SID . Event
+number 34 specifies an audit trail event. These events are recorded if the parameter
+AUDIT_TRAIL is set to db ( true ) or os in the initialization parameter file. Option os
+enables systemwide auditing and causes audited records to be written to Event Viewer.
+Option db enables systemwide auditing and causes audited records to be written to the
+database audit trail (table SYS.AUD$ ). Some records, however, are written to Event
+Viewer. Event numbers other than 34 specify general database activities, such as an
+instance being started or stopped. When you double-click an icon in Event Viewer, the
+Event Properties dialog box appears with more information about the selected event. Event
+Properties General Tab, for example, shows details about Event ID 4112. In the General
+tab, you find a text description of the event. In the Details tab, you can select Friendly
+View to see the System and Event Data in words or XML View to see the same information in
+XML format, as shown in Event Properties Details Tab. Figure 7-2 Event Properties General
+Tab Description of "Figure 7-2 Event Properties General Tab" Figure 7-3 Event Properties
+Details Tab Description of "Figure 7-3 Event Properties Details Tab" See Also: Microsoft
+operating system documentation for more information about using Event Viewer Parent topic:
+About Event Viewer Oracle Database for Windows problems and other significant occurrences
+are recorded as events in an application event log. View and manage these recorded events
+in Event Viewer. Using Event Viewer Learn how to use Event Viewer. Managing Event Viewer
+Learn how to manage Event Viewer. Reading Event Viewer Learn how to read an Event Viewer.
+Parent topic: Monitoring a Database on Windows Using Event Viewer Learn how to use Event
+Viewer.
+
+26. Oracle Database Thread Information Previous Next JavaScript must be enabled to correctly
+display this content Administrator's Reference Monitoring a Database on Windows Viewing
+Oracle Database Thread Information Viewing Oracle Database Thread Information To view
+information about Oracle Database threads using Oracle Administration Assistant for
+Windows, you must either enable Windows native authentication for the database or run the
+utility ocfgutil.
+
+27. Oracle Database for Windows problems and other significant occurrences are recorded as
+events in an application event log. About Trace Files Oracle Database for Windows
+background threads use trace files to record occurrences and exceptions of database
+operations, and errors. About Alert Logs Alert logs contain important information about
+error messages and exceptions that occur during database operations. Viewing Oracle
+Database Thread Information To view information about Oracle Database threads using Oracle
+Administration Assistant for Windows, you must either enable Windows native authentication
+for the database or run the utility ocfgutil.exe with arguments username and password .
+Learn how to monitor Oracle Database for Windows.
+
+28. Database Monitoring Tools describes tools that enable you to monitor Oracle Database.
+
+29. Includes tools for JVM monitoring and tools commonly required for server applications, but
+does not include browser integration (Java plug-in), auto-update, or an installer.
+
+30. Description of the illustration procinfo.gif Parent topic: Monitoring a Database on
+Windows
+
+31. Oracle Enterprise Manager documentation set for more information Oracle Administration
+Assistant for Windows View information about or terminate any Oracle thread. Note: A
+64-bit version of Oracle Enterprise Manager Database Express is available on 64-bit
+Windows. Oracle Enterprise Manager Database Express can manage a 32-bit Windows database
+from a remote Linux or Windows 64-bit computer. Database Monitoring Tools describes tools
+that enable you to monitor Oracle Database.
+
+32. Monitor and tune using tools with a real-time graphical performance information.
+
+33. Oracle Database for Windows. Overview of Database Monitoring Tools Database Monitoring
+Tools describes tools that enable you to monitor Oracle Database.
+
+34. Table 7-1 Database Monitoring Tools Tool Functionality Event Viewer Monitor database
+events.
+
+35. Application Performance Monitoring
+
+36. Monitor database events.
+
+37. OracleOraConfig When the Windows native authentication is not enabled, Oracle Remote
+Configuration Agent retrieves the user name and password from this registry key to log in
+to the database. To view information about Oracle Database threads using Oracle
+Administration Assistant for Windows: From the Start menu, select All Programs , then
+select Oracle - HOMENAME , then select Configuration and Migration Tools , and then select
+Administration Assistant for Windows . Right-click the SID , where SID is a specific
+instance name, such as orcl . Select Process Information . The Process Information dialog
+box appears, listing name, type, user, thread ID, and CPU usage for each Oracle Database
+thread. To terminate a thread, select it, and click Kill Thread . Description of the
+illustration procinfo.gif Parent topic: Monitoring a Database on Windows To view
+information about Oracle Database threads using Oracle Administration Assistant for
+Windows, you must either enable Windows native authentication for the database or run the
+utility ocfgutil.
+
+38. Oracle Database for Windows background threads use trace files to record occurrences and
+exceptions of database operations, and errors. Background thread trace files are created
+and stored in the Automatic Diagnostic Repository (ADR) directory specified by the
+parameter DIAGNOSTIC_DEST in the initialization parameter file. Oracle Database creates a
+different trace file for each foreground and background thread. The name of the trace file
+contains the name of the thread, followed by the extension ". trc" . The following are
+examples of foreground trace file names: ops_ora_5804.trc ops_ora_4160.trc The following
+are the examples of the background trace file names: ops_pmon_1556.trc ops_mmon_3768.trc
+ops_lgwr_2356.trc ops_dbw0_132.trc Trace files are also created for user threads and
+stored in the ADR directory specified by the parameter DIAGNOSTIC_DEST in the
+initialization parameter file. Trace files for user threads have the form ora xxxxx .trc ,
+where xxxxx is a 5-digit number indicating the Windows thread ID . Parent topic:
+Monitoring a Database on Windows Oracle Database for Windows background threads use trace
+files to record occurrences and exceptions of database operations, and errors.
+
+39. Oracle Sales or Cloud Support using the Chat link in the menu bar. The Oracle Sales team
+can help you sign up for Oracle Cloud Free Tier. Who is eligible for Oracle Cloud Free
+Tier? One Oracle Cloud Free Trial or Always Free account is permitted per person. Please
+note: Creating or attempting to create multiple free accounts is prohibited. All contact
+and billing information provided must be accurate, valid, and used with consent for the
+duration of the account. Failure to comply with these requirements may result in the
+suspension or termination of your account. Why do I need to provide credit or debit card
+information when I sign up for Oracle Cloud Free Tier? To provide free Oracle Cloud
+accounts to our valued customers, we need to ensure that you are who you say you are. We
+use your contact information and credit/debit card information for account setup and
+identity verification. Oracle may periodically check the validity of your card, resulting
+in a temporary “authorization” hold. These holds are removed by your bank, typically
+within three to five days, and do not result in actual charges to your account. What
+payment methods does Oracle accept? We accept credit cards and debit cards that function
+like credit cards. We do not accept debit cards with a PIN or virtual, single-use, or
+prepaid cards. What is the advantage of moving to Pay As You Go accounts after the trial?
+You have access to customer support to open tickets and troubleshoot account issues. Pay
+As You Go accounts are subject to different capacity limits than Always Free accounts. As
+you move from development and testing to production scenarios, you may need to use
+resources outside of Always Free limits. You will have access to the latest portfolio of
+OCI services, such as artificial intelligence, and you only pay for what you use. How do I
+know how much I am going be charged for Pay As You Go services? You will only be charged
+for services that you use that exceeds Always Free. You can find information about costs
+in the Oracle Cloud Price List and the Oracle cloud cost estimator . View all Oracle Cloud
+Free Tier FAQ *Free Tier is generally available in regions where commercial Oracle Cloud
+Infrastructure service is available See the data regions page for detailed service
+availability (Exact regions available for Free Tier may differ during signup process). The
+US$300 cloud credit is available in select countries and valid for up to 30 days. Cloud
+credits consumption can be subject to discounted rates during the 30-day promotional
+period. ** Availability to Free Tier is subject to capacity limits. The capacity limits
+listed under each service are only estimates and reflect the maximum capacity you can get
+if you consume your entire credit on one service during the promotional period. The
+maximum capacity per service you get can be less if you consume multiple services. The
+list of services and capacity estimates are subject to change. Your credit balance is
+available to you in the Oracle Cloud Infrastructure Console. Resources for Careers
+Developers Investors Partners Startups Students and Educators Why Oracle Analyst Reports
+Cloud Economics with Microsoft Azure vs. AWS vs. Google Cloud vs. MongoDB Learn What is
+AI? What is Cloud Computing? What is Cloud Storage? What is HPC? What is IaaS? What is
+PaaS? What’s new Oracle Cloud Free Tier Cloud Architecture Center Cloud Lift Oracle
+Support Rewards Oracle Red Bull Racing Contact us Sales: +1.800.633.0738 How can we help?
+Subscribe to emails Events News OCI Blog Country/Region © 2026 Oracle Privacy / Do Not
+Sell My Info Ad Choices Careers Facebook Twitter LinkedIn YouTube Accessibility Policy
+Skip to content About Services Solutions Pricing Partners Resources Close Search
+Oracle.com QUICK LINKS Oracle Cloud Infrastructure Oracle Fusion Cloud Applications Oracle
+Database Download Java Careers at Oracle Search Country Menu Contact Sales Sign in to
+Oracle Cloud Oracle Cloud Free Tier Build, test, and deploy applications on Oracle
+Cloud—for free. Start for free Sign in to Oracle Cloud Here is how Oracle Cloud Free Tier
+works 1 Start with a US$300 cloud credit.* You’ll have 30 days to use it to test your
+applications on all OCI services, in addition to Always Free Services in your Free Tier
+account. 2 At any time during or after the 30-day period,* switch to a Pay As You Go
+account. Pay only for services that exceed the monthly free amounts from Always Free
+Services. 3 If you do nothing after 30 days, you’ll continue to get Always Free Services
+in your Free Tier account. Oracle Cloud Free Tier Get cloud credits and start using Oracle
+Cloud services. Sign up now Services available on Oracle Cloud Free Tier Featured Product
+Tier Type Always Free Trial Product Category Filtered by: No Filters applied Clear all
+Here are some resources to enhance your Oracle Cloud Free Tier experience Developer
+Resource Center Discover, learn, and build. Create common apps and grow with generative
+AI. Enjoy unmatched capabilities. Learn more about Developer Resource Center Oracle
+Architecture Center Design and implement your workloads faster and more efficiently with
+reference architectures, quick-start guides, and other resources. Learn more about Oracle
+Architecture Center Free training and accreditation The Oracle Learning Explorer program
+offers entry-level training courses and accreditation for Oracle's entire product
+portfolio. Learn more about Free training and accreditation Frequently asked questions
+Open all Close all What is Oracle Cloud Free Tier? Oracle Cloud Free Tier allows you to
+sign up for an Oracle Cloud account which provides a number of Always Free services and a
+Free Trial with US$300 of free credit to use on all eligible Oracle Cloud Infrastructure
+services for up to 30 days. The Always Free services are available for an unlimited period
+of time. The Free Trial services may be used until your US$300 of free credits are
+consumed or the 30 days has expired, whichever comes first. What are Always Free Services?
+Always Free services are part of Oracle Cloud Free Tier. Always Free services are
+available for an unlimited time. Some limitations apply. As new Always Free services
+become available, you will automatically be able to use those as well. The following
+services are available as Always Free: HeatWave AMD-based Compute Arm-based Ampere A1
+Compute Block Volume Object Storage Archive Storage Flexible Load Balancer Flexible
+Network Load Balancer Site-to-Site VPN Autonomous Data Warehouse Autonomous Transaction
+Processing Autonomous JSON Database NoSQL Database (Phoenix Region only) APEX Application
+Development Resource Manager (Terraform) Monitoring Notifications Logging Application
+Performance Monitoring Service Connector Hub Vault Bastions Security Advisor Virtual Cloud
+Networks Site-to-Site VPN Content Management Starter Edition Email Delivery Is Oracle
+Cloud Free Tier available in all countries? Oracle Cloud Free Tier is currently available
+in all regions where commercial Oracle Cloud Infrastructure service is available.
+
+40. Overview of Database Monitoring Tools Database Monitoring Tools describes tools that
+enable you to monitor Oracle Database.
+
+41. Oracle Enterprise Manager Database Management Packs Monitor and tune using tools with a
+real-time graphical performance information.
+
+42. Oracle Sales or Cloud Support using the Chat link in the menu bar. The Oracle Sales team
+can help you sign up for Oracle Cloud Free Tier. Who is eligible for Oracle Cloud Free
+Tier? One Oracle Cloud Free Trial or Always Free account is permitted per person. Please
+note: Creating or attempting to create multiple free accounts is prohibited. All contact
+and billing information provided must be accurate, valid, and used with consent for the
+duration of the account. Failure to comply with these requirements may result in the
+suspension or termination of your account. Why do I need to provide credit or debit card
+information when I sign up for Oracle Cloud Free Tier? To provide free Oracle Cloud
+accounts to our valued customers, we need to ensure that you are who you say you are. We
+use your contact information and credit/debit card information for account setup and
+identity verification. Oracle may periodically check the validity of your card, resulting
+in a temporary “authorization” hold. These holds are removed by your bank, typically
+within three to five days, and do not result in actual charges to your account. What
+payment methods does Oracle accept? We accept credit cards and debit cards that function
+like credit cards. We do not accept debit cards with a PIN or virtual, single-use, or
+prepaid cards. What is the advantage of moving to Pay As You Go accounts after the trial?
+You have access to customer support to open tickets and troubleshoot account issues. Pay
+As You Go accounts are subject to different capacity limits than Always Free accounts. As
+you move from development and testing to production scenarios, you may need to use
+resources outside of Always Free limits. You will have access to the latest portfolio of
+OCI services, such as artificial intelligence, and you only pay for what you use. How do I
+know how much I am going be charged for Pay As You Go services? You will only be charged
+for services that you use that exceeds Always Free. You can find information about costs
+in the Oracle Cloud Price List and the Oracle cloud cost estimator . View all Oracle Cloud
+Free Tier FAQ What is Oracle Cloud Free Tier? Oracle Cloud Free Tier allows you to sign up
+for an Oracle Cloud account which provides a number of Always Free services and a Free
+Trial with US$300 of free credit to use on all eligible Oracle Cloud Infrastructure
+services for up to 30 days. The Always Free services are available for an unlimited period
+of time. The Free Trial services may be used until your US$300 of free credits are
+consumed or the 30 days has expired, whichever comes first. What are Always Free Services?
+Always Free services are part of Oracle Cloud Free Tier. Always Free services are
+available for an unlimited time. Some limitations apply. As new Always Free services
+become available, you will automatically be able to use those as well. The following
+services are available as Always Free: HeatWave AMD-based Compute Arm-based Ampere A1
+Compute Block Volume Object Storage Archive Storage Flexible Load Balancer Flexible
+Network Load Balancer Site-to-Site VPN Autonomous Data Warehouse Autonomous Transaction
+Processing Autonomous JSON Database NoSQL Database (Phoenix Region only) APEX Application
+Development Resource Manager (Terraform) Monitoring Notifications Logging Application
+Performance Monitoring Service Connector Hub Vault Bastions Security Advisor Virtual Cloud
+Networks Site-to-Site VPN Content Management Starter Edition Email Delivery Is Oracle
+Cloud Free Tier available in all countries? Oracle Cloud Free Tier is currently available
+in all regions where commercial Oracle Cloud Infrastructure service is available.
+
+43. Oracle Enterprise Manager documentation set for more information Oracle Administration
+Assistant for Windows View information about or terminate any Oracle thread. Note: A
+64-bit version of Oracle Enterprise Manager Database Express is available on 64-bit
+Windows. Oracle Enterprise Manager Database Express can manage a 32-bit Windows database
+from a remote Linux or Windows 64-bit computer. See Also: Oracle Database Performance
+Tuning Guide Parent topic: Monitoring a Database on Windows Database Monitoring Tools
+describes tools that enable you to monitor Oracle Database.
+
+44. Oracle Database for Windows problems and other significant occurrences are recorded as
+events in an application event log. About Trace Files Oracle Database for Windows
+background threads use trace files to record occurrences and exceptions of database
+operations, and errors. About Alert Logs Alert logs contain important information about
+error messages and exceptions that occur during database operations. Viewing Oracle
+Database Thread Information To view information about Oracle Database threads using Oracle
+Administration Assistant for Windows, you must either enable Windows native authentication
+for the database or run the utility ocfgutil.exe with arguments username and password .
+Overview of Database Monitoring Tools Database Monitoring Tools describes tools that
+enable you to monitor Oracle Database.
+
+45. See Also: Oracle Database Performance Tuning Guide Parent topic: Monitoring a Database on
+Windows
+
+46. The following services are available as Always Free: HeatWave AMD-based Compute Arm-based
+Ampere A1 Compute Block Volume Object Storage Archive Storage Flexible Load Balancer
+Flexible Network Load Balancer Site-to-Site VPN Autonomous Data Warehouse Autonomous
+Transaction Processing Autonomous JSON Database NoSQL Database (Phoenix Region only) APEX
+Application Development Resource Manager (Terraform) Monitoring Notifications Logging
+Application Performance Monitoring Service Connector Hub Vault Bastions Security Advisor
+Virtual Cloud Networks Site-to-Site VPN Content Management Starter Edition Email Delivery
+
